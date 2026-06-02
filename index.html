@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tense Quest RPG</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="particles"></div>
+
+<!-- TITLE SCREEN -->
+<div id="title-screen" class="screen active">
+  <div class ="title-logo">
+  <img src="/assets/title.png" alt="Tense Quest Title Art">
+  </div>
+
+  <div class="chapters-preview">
+    <div class="chapter-pill"><span></span>Ch.1 — Simple Present</div>
+    <div class="chapter-pill"><span></span>Ch.2 — Simple Past</div>
+    <div class="chapter-pill"><span></span>Ch.3 — Simple Future</div>
+    <div class="chapter-pill"><span></span>Ch.4 — Present Continuous</div>
+    <div class="chapter-pill"><span></span>Boss Battle</div>
+    <div class="chapter-pill"><span></span>More coming…</div>
+  </div>
+
+  <button id="beginQuest" class="btn primary" onclick="startGame()">⚔ Begin Quest</button>
+
+  <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--text3); font-style:italic;">
+    Master the 12 tenses. Slay the Grammar Dragon.
+  </p>
+</div>
+<!-- SOUNDTRACK-->
+  <audio id="menuMusic" loop>
+    <source src="/assets/Frieren the Slayer.mp3" type="audio/mp3">
+</audio>
+
+<audio id="gameMusic" loop>
+    <source src="/assets/Zoltraak.mp3" type="audio/mp3">
+</audio>
+
+<!-- GAME SCREEN -->
+<div id="game-screen" class="screen">
+
+  <div class="hud">
+    <div class="hud-avatar">🧙</div>
+
+    <div>
+      <div class="hud-label">HERO</div>
+      <div class="hud-val" id="hud-name">Scholar</div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <div class="hud-label">HP <span id="hud-hp-txt">100/100</span></div>
+      <div class="hp-bar-wrap">
+        <div class="hp-bar-bg">
+          <div class="hp-bar" id="hud-hp" style="width:100%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <div class="hud-label">XP <span   id="hud-xp-txt">0/100</span></div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-bg">
+          <div class="xp-bar" id="hud-xp" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hud-section">
+      <div class="hud-label">LVL</div>
+      <div class="hud-val" id="hud-lvl">1</div>
+    </div>
+
+    <div class="hud-section">
+      <div class="hud-label">SCORE</div>
+      <div class="hud-val" id="hud-score">0</div>
+    </div>
+
+    <div class="hud-right">
+      <div class="progress-dots" id="prog-dots"></div>
+    </div>
+  </div>
+
+  <div class="game-body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="sidebar-title">Character</div>
+
+      <div class="char-card">
+        <div class="char-avatar">🧙‍♂️</div>
+        <div class="char-name" id="sb-name">Grammar Scholar</div>
+        <div class="char-class" id="sb-class">Apprentice Grammarian</div>
+
+        <div class="char-stats">
+          <div class="stat-row"><span class="stat-label">❤️ HP</span><span class="stat-val" id="sb-hp">100 / 100</span></div>
+          <div class="stat-row"><span class="stat-label">⭐ Level</span><span class="stat-val" id="sb-lvl">1</span></div>
+          <div class="stat-row"><span class="stat-label">✨ XP</span><span class="stat-val" id="sb-xp">0 / 100</span></div>
+          <div class="stat-row"><span class="stat-label">🏆 Score</span><span class="stat-val" id="sb-score">0</span></div>
+          <div class="stat-row"><span class="stat-label">🔥 Streak</span><span class="stat-val" id="sb-streak">0</span></div>
+          <div class="stat-row"><span class="stat-label">💡 Hints</span><span class="stat-val" id="sb-hints">3</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-title">Chapters</div>
+      <div class="chapter-list" id="chapter-list"></div>
+
+      <div class="sidebar-title">Inventory</div>
+
+      <div class="inventory-grid">
+        <div class="inv-item" onclick="useHint()">
+          <span>💡</span>Hint Scroll<br>
+          <small id="hint-count" style="color:var(--gold3)">×3</small>
+        </div>
+
+        <div class="inv-item empty">
+          <span>🧪</span>HP Potion<br>
+          <small style="color:var(--text3)">×0</small>
+        </div>
+
+        <div class="inv-item empty">
+          <span>⚡</span>Power Rune<br>
+          <small style="color:var(--text3)">×0</small>
+        </div>
+
+        <div class="inv-item empty">
+          <span>🛡️</span>Shield<br>
+          <small style="color:var(--text3)">×0</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="main-content"></div>
+
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen" class="screen">
+  <div class="result-box" id="result-box">
+
+    <div class="result-icon" id="res-icon">🏆</div>
+
+    <div class="result-title" id="res-title">Victory!</div>
+
+    <p id="res-msg" style="color:var(--text2); margin-bottom:1rem; font-style:italic;"></p>
+
+    <div class="result-stats">
+
+      <div class="result-stat">
+        <div class="result-stat-label">FINAL SCORE</div>
+        <div class="result-stat-val" id="res-score">0</div>
+      </div>
+
+      <div class="result-stat">
+        <div class="result-stat-label">LEVEL REACHED</div>
+        <div class="result-stat-val" id="res-lvl">1</div>
+      </div>
+
+      <div class="result-stat">
+        <div class="result-stat-label">CORRECT ANSWERS</div>
+        <div class="result-stat-val" id="res-correct">0</div>
+      </div>
+
+      <div class="result-stat">
+        <div class="result-stat-label">MAX STREAK</div>
+        <div class="result-stat-val" id="res-streak">0</div>
+      </div>
+
+    </div>
+
+    <div style="display:flex; gap:0.8rem; justify-content:center; flex-wrap:wrap;">
+      <button class="btn primary" onclick="restartGame()">⚔ Play Again</button>
+      <button class="btn" onclick="showScreen('title-screen')">🏠 Main Menu</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
